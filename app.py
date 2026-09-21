@@ -893,4 +893,3 @@ Gestão inteligente para lojas de roupa
 """,
 unsafe_allow_html=True
 )
-```
