@@ -1,74 +1,40 @@
+```python
 import streamlit as st
 import pandas as pd
 import os
 
-# =========================================================
-# CONFIGURAÇÃO DA PÁGINA
-# =========================================================
-
 st.set_page_config(
-    page_title="AutoCadastro PRO",
-    page_icon="🚗",
+    page_title="ModaStore PRO",
+    page_icon="👗",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-ARQUIVO = "carros.csv"
-
-# =========================================================
-# IMAGENS
-# =========================================================
+ARQUIVO = "roupas.csv"
 
 IMAGEM_HERO = (
     "https://images.unsplash.com/"
-    "photo-1492144534655-ae79c964c9d7"
+    "photo-1445205170230-053b83016050"
     "?auto=format&fit=crop&w=1800&q=90"
 )
 
-IMAGEM_FROTA = (
+IMAGEM_LOJA = (
     "https://images.unsplash.com/"
-    "photo-1502877338535-766e1452684a"
+    "photo-1555529669-e69e7aa0ba9a"
     "?auto=format&fit=crop&w=1200&q=85"
 )
 
-# =========================================================
-# CSS
-# =========================================================
-
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-@import url(
-'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap'
-);
-
-/* =========================================================
-FONTE
-========================================================= */
-
-html,
-body,
-[class*="css"] {
+html, body, [class*="css"] {
     font-family: 'Poppins', sans-serif;
 }
 
-/* =========================================================
-FUNDO PRINCIPAL
-========================================================= */
-
 .stApp {
-    background:
-        linear-gradient(
-            135deg,
-            #F0F0E5 0%,
-            #E1E4C8 50%,
-            #D4DCB5 100%
-        );
+    background: linear-gradient(135deg, #f8f1f5 0%, #f0e1e9 50%, #e8d3df 100%);
 }
-
-/* =========================================================
-ÁREA PRINCIPAL
-========================================================= */
 
 .block-container {
     max-width: 1400px;
@@ -76,29 +42,14 @@ FUNDO PRINCIPAL
     padding-bottom: 3rem;
 }
 
-/* =========================================================
-SIDEBAR
-========================================================= */
-
 [data-testid="stSidebar"] {
-    background:
-        linear-gradient(
-            180deg,
-            #162630,
-            #223944
-        );
-
-    border-right:
-        2px solid #77864B;
+    background: linear-gradient(180deg, #321b2b, #513246);
+    border-right: 2px solid #c58ca9;
 }
 
 [data-testid="stSidebar"] * {
     color: #FFFFFF !important;
 }
-
-/* =========================================================
-LOGO
-========================================================= */
 
 .logo-title {
     font-size: 28px;
@@ -110,30 +61,22 @@ LOGO
 .logo-subtitle {
     font-size: 11px;
     font-weight: 700;
-    color: #BFCB9C !important;
+    color: #e7b9ce !important;
     letter-spacing: 1px;
 }
-
-/* =========================================================
-TÍTULOS
-========================================================= */
 
 .page-title {
     font-size: 38px;
     font-weight: 800;
-    color: #26311F !important;
+    color: #351f2d !important;
     margin-bottom: 5px;
 }
 
 .page-subtitle {
     font-size: 17px;
-    color: #46513B !important;
+    color: #66495a !important;
     margin-bottom: 30px;
 }
-
-/* =========================================================
-HERO
-========================================================= */
 
 .hero-container {
     position: relative;
@@ -142,41 +85,34 @@ HERO
     border-radius: 28px;
     overflow: hidden;
     margin-bottom: 35px;
-
     background-size: cover;
     background-position: center;
-
-    box-shadow:
-        0 15px 35px rgba(0,0,0,0.22);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.18);
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
-
-    background:
-        linear-gradient(
-            90deg,
-            rgba(14,28,38,0.97) 0%,
-            rgba(14,28,38,0.86) 45%,
-            rgba(14,28,38,0.18) 100%
-        );
+    background: linear-gradient(
+        90deg,
+        rgba(45,22,38,0.96) 0%,
+        rgba(45,22,38,0.78) 45%,
+        rgba(45,22,38,0.10) 100%
+    );
 }
 
 .hero-content {
     position: absolute;
     top: 50%;
     left: 7%;
-
     transform: translateY(-50%);
-
     max-width: 580px;
 }
 
 .hero-number {
     font-size: 70px;
     font-weight: 800;
-    color: #A4D080 !important;
+    color: #e7a9c5 !important;
     line-height: 1;
 }
 
@@ -184,54 +120,35 @@ HERO
     font-size: 46px;
     font-weight: 800;
     color: #FFFFFF !important;
-
     margin-top: 12px;
     line-height: 1.1;
 }
 
 .hero-text {
     font-size: 17px;
-    color: #E8EDDE !important;
-
+    color: #f6eaf0 !important;
     margin-top: 20px;
     line-height: 1.7;
 }
 
 .hero-badge {
     display: inline-block;
-
     margin-top: 24px;
-
     padding: 10px 22px;
-
     border-radius: 30px;
-
-    background: #6E8040;
-
+    background: #9a5578;
     color: #FFFFFF !important;
-
     font-size: 14px;
     font-weight: 700;
 }
 
-/* =========================================================
-CARDS
-========================================================= */
-
 .info-card {
     background: #FFFFFF;
-
     border-radius: 22px;
-
     padding: 28px;
-
     min-height: 170px;
-
-    border:
-        1px solid rgba(111,128,63,0.30);
-
-    box-shadow:
-        0 10px 25px rgba(0,0,0,0.08);
+    border: 1px solid rgba(154,85,120,0.25);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.07);
 }
 
 .card-icon {
@@ -241,39 +158,22 @@ CARDS
 .card-number {
     font-size: 34px;
     font-weight: 800;
-
-    color: #26311F !important;
-
+    color: #351f2d !important;
     margin-top: 10px;
 }
 
 .card-label {
     font-size: 14px;
     font-weight: 700;
-
-    color: #566248 !important;
-
+    color: #76596a !important;
     margin-top: 5px;
 }
 
-/* =========================================================
-CARD ESCURO
-========================================================= */
-
 .dark-card {
-    background:
-        linear-gradient(
-            135deg,
-            #152631,
-            #233C48
-        );
-
+    background: linear-gradient(135deg, #321b2b, #5a344a);
     border-radius: 24px;
-
     padding: 30px;
-
-    box-shadow:
-        0 12px 30px rgba(0,0,0,0.16);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.14);
 }
 
 .dark-card h2 {
@@ -282,32 +182,17 @@ CARD ESCURO
 }
 
 .dark-card p {
-    color: #E2E9DA !important;
+    color: #f4e7ee !important;
     line-height: 1.7;
 }
 
-/* =========================================================
-FORMULÁRIO
-========================================================= */
-
 [data-testid="stForm"] {
-    background:
-        rgba(255,255,255,0.85);
-
+    background: rgba(255,255,255,0.88);
     padding: 30px;
-
     border-radius: 25px;
-
-    border:
-        1px solid #B8C391;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,0.08);
+    border: 1px solid #d7b4c5;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.07);
 }
-
-/* =========================================================
-LABELS DOS CAMPOS
-========================================================= */
 
 [data-testid="stWidgetLabel"],
 [data-testid="stWidgetLabel"] label,
@@ -317,208 +202,105 @@ LABELS DOS CAMPOS
 .stNumberInput label,
 .stSelectbox label,
 .stTextArea label {
-    color: #26311F !important;
-
+    color: #351f2d !important;
     opacity: 1 !important;
-
     font-size: 15px !important;
-
     font-weight: 700 !important;
 }
-
-/* =========================================================
-INPUTS
-========================================================= */
 
 .stTextInput input,
 .stNumberInput input,
 .stTextArea textarea {
     background-color: #FFFFFF !important;
-
-    color: #202820 !important;
-
-    -webkit-text-fill-color:
-        #202820 !important;
-
-    border:
-        2px solid #7C8956 !important;
-
+    color: #281c23 !important;
+    -webkit-text-fill-color: #281c23 !important;
+    border: 2px solid #bd8fa7 !important;
     border-radius: 12px !important;
-
     font-size: 16px !important;
-
     font-weight: 500 !important;
 }
 
 .stTextInput input:focus,
 .stNumberInput input:focus,
 .stTextArea textarea:focus {
-    border:
-        2px solid #556B2F !important;
-
-    box-shadow:
-        0 0 0 3px rgba(85,107,47,0.15) !important;
+    border: 2px solid #8e486d !important;
+    box-shadow: 0 0 0 3px rgba(142,72,109,0.12) !important;
 }
 
 input::placeholder,
 textarea::placeholder {
-    color: #6A7060 !important;
+    color: #806b76 !important;
     opacity: 1 !important;
 }
 
-/* =========================================================
-SELECTBOX
-========================================================= */
-
 [data-baseweb="select"] > div {
-    background-color: #2F323C !important;
-
-    border:
-        2px solid #687548 !important;
-
+    background-color: #3c2a35 !important;
+    border: 2px solid #a66d8b !important;
     border-radius: 12px !important;
 }
 
-[data-baseweb="select"] > div * {
-    color: #FFFFFF !important;
-
-    -webkit-text-fill-color:
-        #FFFFFF !important;
-
-    opacity: 1 !important;
-}
-
-[data-baseweb="select"] input {
-    color: #FFFFFF !important;
-
-    -webkit-text-fill-color:
-        #FFFFFF !important;
-}
-
+[data-baseweb="select"] > div *,
+[data-baseweb="select"] input,
 [data-baseweb="select"] [class*="singleValue"] {
     color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
 }
 
 [data-baseweb="select"] svg {
     fill: #FFFFFF !important;
-    color: #FFFFFF !important;
 }
 
-[data-baseweb="select"] > div:hover {
-    border-color: #A4B66A !important;
-}
-
-/* =========================================================
-MENU ABERTO DO SELECTBOX
-========================================================= */
-
-[data-baseweb="popover"] {
-    background-color: #2F323C !important;
-}
-
+[data-baseweb="popover"],
 [data-baseweb="menu"] {
-    background-color: #2F323C !important;
+    background-color: #3c2a35 !important;
 }
 
 [role="option"] {
-    background-color: #2F323C !important;
-
+    background-color: #3c2a35 !important;
     color: #FFFFFF !important;
-
-    -webkit-text-fill-color:
-        #FFFFFF !important;
 }
 
 [role="option"]:hover {
-    background-color: #52632D !important;
-
+    background-color: #75405d !important;
     color: #FFFFFF !important;
 }
 
-/* =========================================================
-BOTÕES
-========================================================= */
-
 .stButton > button,
 div[data-testid="stFormSubmitButton"] > button {
-    background:
-        linear-gradient(
-            135deg,
-            #52632D,
-            #788B48
-        ) !important;
-
+    background: linear-gradient(135deg, #8d4b6d, #b56f92) !important;
     color: #FFFFFF !important;
-
     border: none !important;
-
     border-radius: 14px !important;
-
     min-height: 54px;
-
-    font-family:
-        'Poppins', sans-serif !important;
-
+    font-family: 'Poppins', sans-serif !important;
     font-size: 15px !important;
-
     font-weight: 700 !important;
-
-    box-shadow:
-        0 8px 18px rgba(82,99,45,0.25);
+    box-shadow: 0 8px 18px rgba(141,75,109,0.24);
 }
 
 .stButton > button:hover,
 div[data-testid="stFormSubmitButton"] > button:hover {
-    background:
-        linear-gradient(
-            135deg,
-            #3E4E23,
-            #647738
-        ) !important;
-
+    background: linear-gradient(135deg, #713a57, #965978) !important;
     color: #FFFFFF !important;
-
-    transform:
-        translateY(-1px);
+    transform: translateY(-1px);
 }
-
-/* =========================================================
-TABELA
-========================================================= */
 
 [data-testid="stDataFrame"] {
     background: #FFFFFF;
-
     border-radius: 18px;
-
     overflow: hidden;
-
-    border:
-        1px solid #B8C391;
+    border: 1px solid #d7b4c5;
 }
-
-/* =========================================================
-RODAPÉ
-========================================================= */
 
 .footer {
     margin-top: 50px;
-
     text-align: center;
-
-    color: #536044 !important;
-
+    color: #76596a !important;
     font-size: 14px;
-
     font-weight: 600;
 }
 
-/* =========================================================
-RESPONSIVO
-========================================================= */
-
 @media (max-width: 768px) {
-
     .hero-container {
         height: 500px;
     }
@@ -540,26 +322,21 @@ RESPONSIVO
         font-size: 30px;
     }
 }
-
 </style>
 """, unsafe_allow_html=True)
 
-
-# =========================================================
-# FUNÇÕES
-# =========================================================
 
 def carregar_dados():
 
     colunas = [
         "Marca",
-        "Modelo",
-        "Ano",
+        "Produto",
+        "Categoria",
+        "Tamanho",
         "Cor",
-        "Placa",
-        "Quilometragem",
-        "Valor",
-        "Observações"
+        "Estoque",
+        "Preco",
+        "Observacoes"
     ]
 
     if os.path.exists(ARQUIVO):
@@ -582,27 +359,20 @@ def salvar_dados(dados):
     )
 
 
-# =========================================================
-# CARREGAR DADOS
-# =========================================================
-
 df = carregar_dados()
 
 
-# =========================================================
-# GARANTIR COLUNAS NECESSÁRIAS
-# =========================================================
-
 colunas_necessarias = [
     "Marca",
-    "Modelo",
-    "Ano",
+    "Produto",
+    "Categoria",
+    "Tamanho",
     "Cor",
-    "Placa",
-    "Quilometragem",
-    "Valor",
-    "Observações"
+    "Estoque",
+    "Preco",
+    "Observacoes"
 ]
+
 
 for coluna in colunas_necessarias:
 
@@ -610,37 +380,31 @@ for coluna in colunas_necessarias:
         df[coluna] = ""
 
 
-# =========================================================
-# CONVERTER VALORES
-# =========================================================
-
-df["Valor"] = pd.to_numeric(
-    df["Valor"],
-    errors="coerce"
-).fillna(0)
-
-df["Quilometragem"] = pd.to_numeric(
-    df["Quilometragem"],
+df["Preco"] = pd.to_numeric(
+    df["Preco"],
     errors="coerce"
 ).fillna(0)
 
 
-# =========================================================
-# SIDEBAR
-# =========================================================
+df["Estoque"] = pd.to_numeric(
+    df["Estoque"],
+    errors="coerce"
+).fillna(0)
+
 
 st.sidebar.markdown(
 """
 <div class="logo-title">
-🚗 AutoCadastro
+👗 ModaStore
 </div>
 
 <div class="logo-subtitle">
-GESTÃO INTELIGENTE DE VEÍCULOS
+GESTÃO INTELIGENTE DA SUA LOJA
 </div>
 """,
 unsafe_allow_html=True
 )
+
 
 st.sidebar.markdown(
     "<br>",
@@ -652,8 +416,8 @@ menu = st.sidebar.radio(
     "NAVEGAÇÃO",
     [
         "🏠 Dashboard",
-        "➕ Cadastrar Carro",
-        "🚙 Carros Cadastrados"
+        "➕ Cadastrar Produto",
+        "👗 Produtos Cadastrados"
     ]
 )
 
@@ -661,13 +425,9 @@ menu = st.sidebar.radio(
 st.sidebar.markdown("---")
 
 st.sidebar.caption(
-    "AutoCadastro PRO • 2026"
+    "ModaStore PRO • 2026"
 )
 
-
-# =========================================================
-# DASHBOARD
-# =========================================================
 
 if menu == "🏠 Dashboard":
 
@@ -685,18 +445,18 @@ style="background-image: url('{IMAGEM_HERO}');">
 </div>
 
 <div class="hero-title">
-Sua frota.<br>
-Seu controle.
+Sua loja.<br>
+Seu estilo.
 </div>
 
 <div class="hero-text">
-Tenha todos os seus veículos organizados em um único lugar.<br>
-Cadastre, consulte e acompanhe sua frota de forma simples,
-rápida e profissional.
+Organize suas roupas e produtos em um único lugar.<br>
+Cadastre, consulte e acompanhe seu estoque de forma
+simples, rápida e profissional.
 </div>
 
 <div class="hero-badge">
-🚗 GESTÃO INTELIGENTE
+👗 GESTÃO DE MODA
 </div>
 
 </div>
@@ -710,22 +470,24 @@ unsafe_allow_html=True
     st.markdown(
 """
 <div class="page-title">
-📊 Visão geral da sua frota
+📊 Visão geral da loja
 </div>
 
 <div class="page-subtitle">
-Acompanhe seus veículos e mantenha tudo organizado.
+Acompanhe seus produtos, estoque e valor do catálogo.
 </div>
 """,
 unsafe_allow_html=True
 )
 
 
-    total_carros = len(df)
+    total_produtos = len(df)
 
-    valor_total = df["Valor"].sum()
+    estoque_total = df["Estoque"].sum()
 
-    km_total = df["Quilometragem"].sum()
+    valor_catalogo = (
+        df["Preco"] * df["Estoque"]
+    ).sum()
 
 
     col1, col2, col3 = st.columns(3)
@@ -738,15 +500,15 @@ f"""
 <div class="info-card">
 
 <div class="card-icon">
-🚗
+👗
 </div>
 
 <div class="card-number">
-{total_carros}
+{total_produtos}
 </div>
 
 <div class="card-label">
-VEÍCULOS CADASTRADOS
+PRODUTOS CADASTRADOS
 </div>
 
 </div>
@@ -762,15 +524,15 @@ f"""
 <div class="info-card">
 
 <div class="card-icon">
-💰
+📦
 </div>
 
 <div class="card-number">
-R$ {valor_total:,.2f}
+{estoque_total:,.0f}
 </div>
 
 <div class="card-label">
-VALOR TOTAL DA FROTA
+PEÇAS EM ESTOQUE
 </div>
 
 </div>
@@ -786,15 +548,15 @@ f"""
 <div class="info-card">
 
 <div class="card-icon">
-🛣️
+💰
 </div>
 
 <div class="card-number">
-{km_total:,.0f} km
+R$ {valor_catalogo:,.2f}
 </div>
 
 <div class="card-label">
-QUILOMETRAGEM REGISTRADA
+VALOR DO ESTOQUE
 </div>
 
 </div>
@@ -819,17 +581,17 @@ unsafe_allow_html=True
 <div class="dark-card">
 
 <h2>
-🚀 Controle profissional
+✨ Controle profissional
 </h2>
 
 <p>
-O AutoCadastro PRO permite manter todos os seus veículos
-organizados em um único lugar.
+O ModaStore PRO permite manter todos os produtos
+da sua loja organizados em um único lugar.
 </p>
 
 <p>
-Cadastre, consulte, pesquise e acompanhe as informações
-da sua frota de maneira moderna e profissional.
+Cadastre, consulte, pesquise e acompanhe roupas,
+tamanhos, cores, preços e estoque de maneira moderna.
 </p>
 
 </div>
@@ -841,25 +603,21 @@ unsafe_allow_html=True
     with coluna2:
 
         st.image(
-            IMAGEM_FROTA,
+            IMAGEM_LOJA,
             use_container_width=True
         )
 
 
-# =========================================================
-# CADASTRAR CARRO
-# =========================================================
-
-elif menu == "➕ Cadastrar Carro":
+elif menu == "➕ Cadastrar Produto":
 
     st.markdown(
 """
 <div class="page-title">
-➕ Novo veículo
+➕ Novo produto
 </div>
 
 <div class="page-subtitle">
-Adicione um novo veículo ao seu AutoCadastro PRO.
+Adicione uma nova peça ao catálogo da sua loja.
 </div>
 """,
 unsafe_allow_html=True
@@ -867,7 +625,7 @@ unsafe_allow_html=True
 
 
     with st.form(
-        "cadastro_carro",
+        "cadastro_produto",
         clear_on_submit=True
     ):
 
@@ -880,52 +638,71 @@ unsafe_allow_html=True
                 "🏷️ Marca"
             )
 
-            modelo = st.text_input(
-                "🚗 Modelo"
+            produto = st.text_input(
+                "👗 Produto"
             )
 
-            ano = st.number_input(
-                "📅 Ano",
-                min_value=1900,
-                max_value=2035,
-                value=2024,
-                step=1
-            )
-
-            cor = st.selectbox(
-                "🎨 Cor",
+            categoria = st.selectbox(
+                "📂 Categoria",
                 [
-                    "Verde Oliva",
-                    "Preto",
-                    "Branco",
-                    "Prata",
-                    "Cinza",
-                    "Vermelho",
-                    "Azul",
-                    "Amarelo",
+                    "Camiseta",
+                    "Blusa",
+                    "Calça",
+                    "Vestido",
+                    "Saia",
+                    "Shorts",
+                    "Jaqueta",
+                    "Moletom",
+                    "Conjunto",
                     "Outro"
+                ]
+            )
+
+            tamanho = st.selectbox(
+                "📏 Tamanho",
+                [
+                    "PP",
+                    "P",
+                    "M",
+                    "G",
+                    "GG",
+                    "XG",
+                    "Único"
                 ]
             )
 
 
         with col2:
 
-            placa = st.text_input(
-                "🔢 Placa"
+            cor = st.selectbox(
+                "🎨 Cor",
+                [
+                    "Preto",
+                    "Branco",
+                    "Rosa",
+                    "Vermelho",
+                    "Azul",
+                    "Verde",
+                    "Bege",
+                    "Marrom",
+                    "Cinza",
+                    "Amarelo",
+                    "Outra"
+                ]
             )
 
-            quilometragem = st.number_input(
-                "🛣️ Quilometragem",
+            estoque = st.number_input(
+                "📦 Quantidade em estoque",
                 min_value=0,
                 value=0,
-                step=100
+                step=1
             )
 
-            valor = st.number_input(
-                "💰 Valor do Veículo",
+            preco = st.number_input(
+                "💰 Preço da peça",
                 min_value=0.0,
                 value=0.0,
-                step=1000.0
+                step=5.0
             )
 
             observacoes = st.text_area(
@@ -934,7 +711,7 @@ unsafe_allow_html=True
 
 
         cadastrar = st.form_submit_button(
-            "💾 CADASTRAR VEÍCULO"
+            "💾 CADASTRAR PRODUTO"
         )
 
 
@@ -942,20 +719,19 @@ unsafe_allow_html=True
 
         if (
             marca.strip()
-            and modelo.strip()
-            and placa.strip()
+            and produto.strip()
         ):
 
-            novo_carro = pd.DataFrame(
+            novo_produto = pd.DataFrame(
                 [{
                     "Marca": marca.strip(),
-                    "Modelo": modelo.strip(),
-                    "Ano": int(ano),
+                    "Produto": produto.strip(),
+                    "Categoria": categoria,
+                    "Tamanho": tamanho,
                     "Cor": cor,
-                    "Placa": placa.strip().upper(),
-                    "Quilometragem": int(quilometragem),
-                    "Valor": float(valor),
-                    "Observações": observacoes.strip()
+                    "Estoque": int(estoque),
+                    "Preco": float(preco),
+                    "Observacoes": observacoes.strip()
                 }]
             )
 
@@ -963,7 +739,7 @@ unsafe_allow_html=True
             df = pd.concat(
                 [
                     df,
-                    novo_carro
+                    novo_produto
                 ],
                 ignore_index=True
             )
@@ -973,7 +749,7 @@ unsafe_allow_html=True
 
 
             st.success(
-                "🚗 Veículo cadastrado com sucesso!"
+                "👗 Produto cadastrado com sucesso!"
             )
 
 
@@ -983,24 +759,20 @@ unsafe_allow_html=True
         else:
 
             st.warning(
-                "⚠️ Preencha Marca, Modelo e Placa."
+                "⚠️ Preencha Marca e Produto."
             )
 
 
-# =========================================================
-# CARROS CADASTRADOS
-# =========================================================
-
-elif menu == "🚙 Carros Cadastrados":
+elif menu == "👗 Produtos Cadastrados":
 
     st.markdown(
 """
 <div class="page-title">
-🚙 Minha frota
+👗 Meu catálogo
 </div>
 
 <div class="page-subtitle">
-Consulte e pesquise todos os veículos cadastrados.
+Consulte e pesquise todos os produtos cadastrados.
 </div>
 """,
 unsafe_allow_html=True
@@ -1014,12 +786,12 @@ unsafe_allow_html=True
 <div class="dark-card">
 
 <h2>
-🚗 Nenhum veículo cadastrado
+👗 Nenhum produto cadastrado
 </h2>
 
 <p>
-Sua garagem ainda está vazia.
-Cadastre seu primeiro veículo para começar.
+Seu catálogo ainda está vazio.
+Cadastre sua primeira peça para começar.
 </p>
 
 </div>
@@ -1031,8 +803,8 @@ unsafe_allow_html=True
     else:
 
         busca = st.text_input(
-            "🔎 Pesquisar veículo",
-            placeholder="Digite marca, modelo, placa ou cor..."
+            "🔎 Pesquisar produto",
+            placeholder="Digite marca, produto, categoria, tamanho ou cor..."
         )
 
 
@@ -1072,25 +844,25 @@ unsafe_allow_html=True
         )
 
 
-        opcoes_carros = df.index.tolist()
+        opcoes_produtos = df.index.tolist()
 
 
-        carro_excluir = st.selectbox(
-            "🗑️ Selecione um veículo para excluir",
-            options=opcoes_carros,
+        produto_excluir = st.selectbox(
+            "🗑️ Selecione um produto para excluir",
+            options=opcoes_produtos,
             format_func=lambda indice:
                 f"{df.loc[indice, 'Marca']} "
-                f"{df.loc[indice, 'Modelo']} - "
-                f"{df.loc[indice, 'Placa']}"
+                f"{df.loc[indice, 'Produto']} - "
+                f"{df.loc[indice, 'Tamanho']}"
         )
 
 
         if st.button(
-            "🗑️ EXCLUIR VEÍCULO"
+            "🗑️ EXCLUIR PRODUTO"
         ):
 
             df = df.drop(
-                carro_excluir
+                produto_excluir
             )
 
 
@@ -1103,25 +875,22 @@ unsafe_allow_html=True
 
 
             st.success(
-                "🚗 Veículo excluído com sucesso!"
+                "👗 Produto excluído com sucesso!"
             )
 
 
             st.rerun()
 
 
-# =========================================================
-# RODAPÉ
-# =========================================================
-
 st.markdown(
 """
 <div class="footer">
 
-🚗 AutoCadastro PRO<br>
-Gestão inteligente de veículos
+👗 ModaStore PRO<br>
+Gestão inteligente para lojas de roupa
 
 </div>
 """,
 unsafe_allow_html=True
 )
+```
